@@ -23,10 +23,18 @@ class UsersController extends Controller
         try {
             $data = $request->all();
 
-            // insert user data into database
-            $addUser = User::create($data);
+            // check if user already exists in the database
+            $userExists = User::where('email', $data['email'])->first();
+            // dd($userExists);
 
-            return $this->apiResponse(false, "New User added successfully",  Response::HTTP_OK, $addUser);
+            if($userExists) {
+                return $this->apiResponse(true, "User already exists", Response::HTTP_CONFLICT);
+            }
+            else {
+                // insert user data into database
+                $user = User::create($data);
+                return $this->apiResponse(false, "New User added successfully",  Response::HTTP_OK, $user);
+            }
         } catch (Exception $e) {
             return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
@@ -49,6 +57,36 @@ class UsersController extends Controller
             // return list of all added users
             $user = User::all();
             return $this->apiResponse(false, "All users fetched successfully",  Response::HTTP_OK, $user);
+        } catch (Exception $e) {
+            return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+     /**
+     * Update the specified User in storage.
+     *
+     * @param  \App\Http\Requests\UserUpdateRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UserUpdateRequest $request, $id)
+    {
+        try {
+            // check if user with ID exist
+            $userExist = User::where('id', $id)->exists();
+            if (!$userExist) {
+                return $this->apiResponse(false, "No user with this ID exist on the user table",  Response::HTTP_NOT_FOUND);
+            };
+
+            $data = $request->all();
+
+            // find user by id
+            $user = User::find($id);
+
+            // update specific user
+            $userUpdate = $user->update($data);
+
+            return $this->apiResponse(false, "User data updated successfully",  Response::HTTP_OK, $userUpdate);
         } catch (Exception $e) {
             return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
         }

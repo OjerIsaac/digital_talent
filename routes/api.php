@@ -19,4 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("user")->group(function () {
     Route::post('/create', [UsersController::class, 'create']);
     Route::get('/fetch-all', [UsersController::class, 'fetch']);
+    Route::put('/{id}/update', [UsersController::class, 'update']);
 });
