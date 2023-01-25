@@ -91,4 +91,30 @@ class UsersController extends Controller
             return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
+
+      /**
+     * Remove the specified User from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        try {
+            // check if user with ID exist
+            $userExist = User::where('id', $id)->exists();
+            if (!$userExist) {
+                return $this->apiResponse(false, "No user with this ID exist on the user table",  Response::HTTP_NOT_FOUND);
+            };
+
+            // find user by id
+            $user = User::find($id);
+
+            // delete specific user
+            $user->delete();
+            return $this->apiResponse(false, "User data deleted successfully",  Response::HTTP_OK);
+        } catch (Exception $e) {
+            return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
