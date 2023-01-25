@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 
 //User Api links
 Route::prefix("user")->group(function () {
-    Route::post('/create', [UserController::class, 'create']);
+    Route::post('/create', [UsersController::class, 'create']);
 });

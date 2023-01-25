@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\Requests;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Termwind\Components\Dd;
