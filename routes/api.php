@@ -18,4 +18,5 @@ use Illuminate\Support\Facades\Route;
 //User Api links
 Route::prefix("user")->group(function () {
     Route::post('/create', [UsersController::class, 'create']);
+    Route::get('/fetch-all', [UsersController::class, 'fetch']);
 });
