@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->unique();
-            $table->string('age');
-            $table->enum('gender', ['male', 'female', 'other']);
             $table->timestamps();
         });
     }
