@@ -16,9 +16,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 //User Api links
-Route::prefix("user")->group(function () {
-    Route::post('/create', [UsersController::class, 'create']);
-    Route::get('/fetch-all', [UsersController::class, 'fetch']);
-    Route::put('/{id}/update', [UsersController::class, 'update']);
-    Route::delete('/{id}/delete', [UsersController::class, 'delete']);
-});
+// Route::prefix("user")->group(function () {
+//     Route::post('/create', [UsersController::class, 'create']);
+//     Route::get('/fetch-all', [UsersController::class, 'fetch']);
+//     Route::put('/{id}/update', [UsersController::class, 'update']);
+//     Route::delete('/{id}/delete', [UsersController::class, 'delete']);
+// });
+
+
+//this is all you need, Check php artisan route:list to view
+
+Route::apiResource('user', UsersController::class);

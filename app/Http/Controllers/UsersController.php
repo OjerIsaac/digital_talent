@@ -18,26 +18,14 @@ class UsersController extends Controller
      * @param  \App\Http\Requests\UserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(UserRequest $request)
+    public function store(UserRequest $request)
     {
-        try {
-            $data = $request->all();
-
-            // check if user already exists in the database
-            $userExists = User::where('email', $data['email'])->first();
-            // dd($userExists);
-
-            if($userExists) {
-                return $this->apiResponse(true, "User already exists", Response::HTTP_CONFLICT);
-            }
-            else {
+           //email validation will check if that user with email exists
+        
                 // insert user data into database
-                $user = User::create($data);
+                $user = User::create($request->validated());
                 return $this->apiResponse(false, "New User added successfully",  Response::HTTP_OK, $user);
-            }
-        } catch (Exception $e) {
-            return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
+
     }
 
     /**
@@ -45,22 +33,21 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function fetch()
+    public function index()
     {
-        try {
-            // check if any user exist
-            $userExist = User::exists();
-            if (!$userExist) {
-                return $this->apiResponse(false, "User does not exists",  Response::HTTP_NOT_FOUND);
-            };
+            //You dont need to check exist for all users 
 
             // return list of all added users
             $user = User::all();
             return $this->apiResponse(false, "All users fetched successfully",  Response::HTTP_OK, $user);
-        } catch (Exception $e) {
-            return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
     }
+
+    public function show(User $user)
+    {
+        
+        return $this->apiResponse(false, "All users fetched successfully",  Response::HTTP_OK, $user);
+    }
+
 
      /**
      * Update the specified User in storage.
@@ -69,27 +56,10 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        try {
-            // check if user with ID exist
-            $userExist = User::where('id', $id)->exists();
-            if (!$userExist) {
-                return $this->apiResponse(false, "No user with this ID exist on the user table",  Response::HTTP_NOT_FOUND);
-            };
-
-            $data = $request->all();
-
-            // find user by id
-            $user = User::find($id);
-
-            // update specific user
-            $userUpdate = $user->update($data);
-
+            $userUpdate = $user->update($request->validated);
             return $this->apiResponse(false, "User data updated successfully",  Response::HTTP_OK, $userUpdate);
-        } catch (Exception $e) {
-            return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
     }
 
       /**
@@ -98,23 +68,12 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy (User $user)
     {
-        try {
-            // check if user with ID exist
-            $userExist = User::where('id', $id)->exists();
-            if (!$userExist) {
-                return $this->apiResponse(false, "No user with this ID exist on the user table",  Response::HTTP_NOT_FOUND);
-            };
-
-            // find user by id
-            $user = User::find($id);
+        //the user model im passing as a parameter will chcek if it exist or not
 
             // delete specific user
             $user->delete();
             return $this->apiResponse(false, "User data deleted successfully",  Response::HTTP_OK);
-        } catch (Exception $e) {
-            return $this->apiResponse(true, $e->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
     }
 }
